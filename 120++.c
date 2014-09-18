@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "token.h"
-#include "llist.h"
+#include "tlist.h"
+#include "clex.h"
 
 extern FILE *yyin;
 extern char *yytext;
-extern struct token *yytoken;
+extern tokenptr yytoken;
 
 int main(int argc, char**argv) {
 

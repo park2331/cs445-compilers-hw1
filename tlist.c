@@ -28,3 +28,12 @@ void print_nodes(nodeptr *head) {
     go = go->next;
   }
 }
+
+void delete_all_nodes(nodeptr *head) {
+  nodeptr go = *head;
+  while (go != NULL) {
+    nodeptr del = go;
+    go = go->next;
+    free(del);
+  }
+}

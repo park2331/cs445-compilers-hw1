@@ -24,7 +24,7 @@ LIT      \"(\\.|[^\\"])*\"
 extern int yychar;
 
 /* Global variables */
-struct token *yytoken;
+tokenptr yytoken;
 FILE *saved_yyin;
 int errors = 0;
 
@@ -42,7 +42,6 @@ int string = FALSE;
 void handle_include();
 void lexerr(char *s);
 void tokenize(int);
-/* struct token *create_token(int, char*, int); */
 
 %}
 /* lexer options */
@@ -162,7 +161,8 @@ void tokenize(int);
 
 void tokenize(int category) {
   yytoken = create_token(category, yytext, yylineno);
-}
+  printf("%d\n", yytoken->category);
+};
 
 void lexerr(char *s)
 {
@@ -170,7 +170,7 @@ void lexerr(char *s)
 	fprintf(stderr, "%s: lexical error", s);
 	/* to do: add mechanism for reporting file name and line number */
 	fprintf(stderr, ", token = \"%s\"\n", yytext);
-}
+};
 
 /*
  * Return 1 if done, 0 if yyin points at more input
@@ -178,7 +178,7 @@ void lexerr(char *s)
 int yywrap()
 {
    return 1;
-}
+};
 
 /*
 void handle_include()
@@ -195,3 +195,4 @@ void handle_include()
    }
 }
 */
+
