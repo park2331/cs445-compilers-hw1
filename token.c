@@ -4,9 +4,12 @@
 #include "cgram.tab.h"
 #include "token.h"
 
+void print_token(tokenptr t) {
+  printf("CATEGORY: %d\n",t->category);
+};
 
 tokenptr create_token(int category, char *text, int lineno) {
-  struct token *t = malloc(sizeof(t));
+  tokenptr t = malloc(sizeof(struct token));
   t->category = category;
 
   /* allocate for text field */
@@ -29,7 +32,7 @@ tokenptr create_token(int category, char *text, int lineno) {
   }
   */
   return t;
-}
+};
 
 
 

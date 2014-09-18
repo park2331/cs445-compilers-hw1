@@ -10,8 +10,8 @@ typedef struct token {
   char *sval;      /* if you had a string constant, malloc space and store */
 } *tokenptr;           /*    the string (less quotes and after escapes) here */
 
-tokenptr  create_token(int category, char *text, int lineno);
-
+tokenptr create_token(int category, char *text, int lineno);
+void print_token(tokenptr);
 #endif /* TOKEN_H */
 
 
