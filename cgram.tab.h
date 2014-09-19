@@ -131,7 +131,8 @@
      BREAK = 347,
      RETURN = 348,
      THEN = 349,
-     ELSE = 350
+     ELSE = 350,
+     STRINGL = 351
    };
 #endif
 

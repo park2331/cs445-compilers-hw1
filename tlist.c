@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "tlist.h"
+#include "token.h"
 
 /* Add token to linked list */
 void add_node(nodeptr *head, tokenptr value) {
@@ -24,7 +25,8 @@ void add_node(nodeptr *head, tokenptr value) {
 void print_nodes(nodeptr *head) {
   nodeptr go = *head;
   while (go != NULL) {
-    printf("TOKEN: %d\n",go->t->category);
+    //    printf("TOKEN: %d\n",go->t->category);
+    print_token(go->t);
     go = go->next;
   }
 }

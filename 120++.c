@@ -14,6 +14,7 @@ char *filetext;
 int main(int argc, char **argv) {
 
   struct node *root = NULL;
+  tokenptr get;
   int i;
 
   for (i = 1; i < argc; i++) {
@@ -24,8 +25,11 @@ int main(int argc, char **argv) {
     printf("CATEGORY     TEXT     LINE NO.\n");
     while (code != 0) {
       code = yylex();
+      get = yytoken;
+      add_node(&root, get);
     }
     fclose(yyin);
   }
+  print_nodes(&root);
   return 0;
 }

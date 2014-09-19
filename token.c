@@ -1,18 +1,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 #include "cgram.tab.h"
 #include "token.h"
 
 void print_token(tokenptr t) {
-  printf("CATEGORY: %d\n",t->category);
-  printf("STRING: %s\n",t->text);
-  printf("LINE NO: %d\n",t->lineno);
-  printf("FILE: %s\n",t->filename);
+  printf("%d\t%s\t\t%d\t%s\t%d\t%s\n",t->category, t->text ,t->lineno, t->filename, t->ival, t->sval);
 };
 
 tokenptr create_token(int category, char *text, int lineno, char *filename) {
   tokenptr t = malloc(sizeof(struct token));
+
+  t->ival = 0;
+  t->sval = "NONE";
+
   /* Integer code*/
   t->category = category;
 
@@ -27,18 +29,13 @@ tokenptr create_token(int category, char *text, int lineno, char *filename) {
   t->filename = malloc(strlen(filename)+1);
   strcpy(t->filename, filename);
 
-  /*  
   if (category == ICON) {
-    t->ival = aoti(text);
+    t->ival = atoi(text);
   }
 
-  if (category == CCON) {
+  if (category == STRING) {
     t->sval = malloc(strlen(text)+1);
     strcpy(t->sval, text);
   }
-  */
   return t;
 };
-
-
-

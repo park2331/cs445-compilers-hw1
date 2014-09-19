@@ -9,6 +9,7 @@
 
 typedef struct node {
   tokenptr t;
+  char *filename;
   struct node *next;
 } *nodeptr;
 

@@ -62,12 +62,11 @@ void tokenize(int);
 "#include <iomanip>"    { iomanip = TRUE; }
 "#include <cmath>"      { cmath = TRUE; }
 "#include <cstdlib>"    { cstdlib = TRUE; }
-
 "#include <cstring>"    { cstring = TRUE; }
 "#include <fstream>"    { fstream = TRUE; }
 "#include <string>"     { string  = TRUE; }
-
 "#include "(<|\")[^(>|\")]+(>|\") { handle_include(); }
+
 "break"                 { tokenize(BREAK); return BREAK; }
 "case"                  { tokenize(CASE); return CASE; }
 "char"                  { tokenize(CHAR); return CHAR; }
@@ -111,6 +110,7 @@ void tokenize(int);
 {D}*"."{D}+({E})?{FS}?  { tokenize(FCON); return FCON; }
 {D}+"."{D}*({E})?{FS}?  { tokenize(FCON); return FCON; }
 {LIT}                   { tokenize(STRING); return STRING; }
+L?{LIT}                 { tokenize(STRINGL); return STRINGL; }
 
 ">>="                   { tokenize(SRASN); return SRASN; }
 "<<="                   { tokenize(SLASN); return SLASN; }
@@ -157,13 +157,11 @@ void tokenize(int);
 "^"                     { tokenize(ER); return ER; }
 "|"                     { tokenize(OR); return OR; }
 "?"                     { tokenize(QUEST); return QUEST; }
-
 .                       { printf("UNRECOGNIZED TOKEN\n"); errors++;}
 %%
 
 void tokenize(int category) {
   yytoken = create_token(category, yytext, yylineno, filetext);
-  printf("%d\n", yytoken->category);
 };
 
 void lexerr(char *s)
@@ -186,6 +184,7 @@ int yywrap()
 void handle_include() {
   printf("OK\n");
 }
+
 /*
 void handle_include()
 {
