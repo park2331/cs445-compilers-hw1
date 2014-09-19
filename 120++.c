@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
     filetext = argv[i];
     int code = -1;
     yyin = fopen(argv[i],"r");
-    printf("CATEGORY     TEXT     LINE NO.\n");
+    printf("CODE\tTEXT\t\tLINE\tFILE\t\tiVAL\tsVAL\n");
     while (code != 0) {
       code = yylex();
       get = yytoken;
