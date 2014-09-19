@@ -22,6 +22,7 @@ LIT      \"(\\.|[^\\"])*\"
 
 /* extern */
 extern int yychar;
+extern char* filetext;
 
 /* Global variables */
 tokenptr yytoken;
@@ -156,11 +157,11 @@ void tokenize(int);
 "|"                     { tokenize(OR); return OR; }
 "?"                     { tokenize(QUEST); return QUEST; }
 
-.                       { printf("UNRECOGNIZED TOKEN\n"); }
+.                       { printf("UNRECOGNIZED TOKEN\n"); errors++;}
 %%
 
 void tokenize(int category) {
-  yytoken = create_token(category, yytext, yylineno);
+  yytoken = create_token(category, yytext, yylineno, filetext);
   printf("%d\n", yytoken->category);
 };
 

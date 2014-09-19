@@ -8,20 +8,23 @@ void print_token(tokenptr t) {
   printf("CATEGORY: %d\n",t->category);
 };
 
-tokenptr create_token(int category, char *text, int lineno) {
+tokenptr create_token(int category, char *text, int lineno, char *filename) {
   tokenptr t = malloc(sizeof(struct token));
+  /* Integer code*/
   t->category = category;
 
-  /* allocate for text field */
+  /* Actual string matched */
   t->text = malloc(strlen(text)+1);
   strcpy(t->text, text);
+
+  /* Line Number*/
   t->lineno = lineno;
-  /*  printf("TOKEN CREATED\n"); */
-  /* allocate for filename field */
-  /*
+
+  /* File name */
   t->filename = malloc(strlen(filename)+1);
   strcpy(t->filename, filename);
-  
+
+  /*  
   if (category == ICON) {
     t->ival = aoti(text);
   }
