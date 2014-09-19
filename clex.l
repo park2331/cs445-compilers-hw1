@@ -67,6 +67,7 @@ void tokenize(int);
 "#include <fstream>"    { fstream = TRUE; }
 "#include <string>"     { string  = TRUE; }
 
+"#include "(<|\")[^(>|\")]+(>|\") { handle_include(); }
 "break"                 { tokenize(BREAK); return BREAK; }
 "case"                  { tokenize(CASE); return CASE; }
 "char"                  { tokenize(CHAR); return CHAR; }
@@ -176,11 +177,16 @@ void lexerr(char *s)
 /*
  * Return 1 if done, 0 if yyin points at more input
  */
+
 int yywrap()
 {
    return 1;
 };
 
+void handle_include() {
+  printf("OK\n");
+}
+/*
 void handle_include()
 {
    char *newfilename = malloc(strlen(yytext)+1-strlen("#include \"\""));
@@ -194,5 +200,6 @@ void handle_include()
      exit(1);
    }
 }
+*/
 
 

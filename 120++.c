@@ -8,6 +8,7 @@ extern FILE *yyin;
 extern char *yytext;
 extern tokenptr yytoken;
 
+/* extern in clex.l to get file name */
 char *filetext;
 
 int main(int argc, char **argv) {
