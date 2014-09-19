@@ -28,7 +28,7 @@ tokenptr yytoken;
 FILE *saved_yyin;
 int errors = 0;
 
-/* '#include flags' */
+/* #include flags */
 int ctime = FALSE;
 int iostream = FALSE;
 int iomanip = FALSE;
@@ -47,13 +47,25 @@ void tokenize(int);
 /* lexer options */
 %option yylineno
 %option default
+/* To fix 'undefined reference errors' */
 %option header-file="clex.h"
 
 %%
 
-\n
+\n                      { }
 [ \t\f]+                { }
 "/*"([^*]*|"*"+[^/]*)"*/" { /* ignore c style comments */}
+
+"#include <iostream>"   { iostream = TRUE; }
+"#include <ctime>"      { ctime = TRUE; }
+"#include <iomanip>"    { iomanip = TRUE; }
+"#include <cmath>"      { cmath = TRUE; }
+"#include <cstdlib>"    { cstdlib = TRUE; }
+
+"#include <cstring>"    { cstring = TRUE; }
+"#include <fstream>"    { fstream = TRUE; }
+"#include <string>"     { string  = TRUE; }
+
 "break"                 { tokenize(BREAK); return BREAK; }
 "case"                  { tokenize(CASE); return CASE; }
 "char"                  { tokenize(CHAR); return CHAR; }
@@ -88,29 +100,15 @@ void tokenize(int);
 
 {L}({L}|{D})*           { tokenize(IDENTIFIER); return IDENTIFIER; }
 
-
 0[xX]{H}+{IS}?          { lexerr("Hex not supported\n"); }
-
 0{O}+{IS}?              { lexerr("Octal not supported\n"); }
 
 {D}+{IS}?               { tokenize(ICON); return ICON; }
-
 '(\\.|[^\\'])+'         { tokenize(CCON); return CCON; }
-
 {D}+{E}{FS}?            { tokenize(FCON); return FCON; }
 {D}*"."{D}+({E})?{FS}?  { tokenize(FCON); return FCON; }
 {D}+"."{D}*({E})?{FS}?  { tokenize(FCON); return FCON; }
-
 {LIT}                   { tokenize(STRING); return STRING; }
-
-"#include <iostream>"   { iostream = TRUE; }
-"#include <ctime>"      { ctime = TRUE; }
-"#include <iomanip>"    { iomanip = TRUE; }
-"#include <cmath>"      { cmath = TRUE; }
-"#include <cstdlib>"    { cstdlib = TRUE; }
-"#include <cstring>"    { cstring = TRUE; }
-"#include <fstream>"    { fstream = TRUE; }
-"#include <string>"     { string  = TRUE; }
 
 ">>="                   { tokenize(SRASN); return SRASN; }
 "<<="                   { tokenize(SLASN); return SLASN; }
@@ -157,6 +155,8 @@ void tokenize(int);
 "^"                     { tokenize(ER); return ER; }
 "|"                     { tokenize(OR); return OR; }
 "?"                     { tokenize(QUEST); return QUEST; }
+
+.                       { printf("UNRECOGNIZED TOKEN\n"); }
 %%
 
 void tokenize(int category) {
@@ -166,10 +166,10 @@ void tokenize(int category) {
 
 void lexerr(char *s)
 {
-	errors++;
-	fprintf(stderr, "%s: lexical error", s);
-	/* to do: add mechanism for reporting file name and line number */
-	fprintf(stderr, ", token = \"%s\"\n", yytext);
+  errors++;
+  fprintf(stderr, "%s: lexical error", s);
+  /* to do: add mechanism for reporting file name and line number */
+  fprintf(stderr, ", token = \"%s\"\n", yytext);
 };
 
 /*
@@ -180,7 +180,6 @@ int yywrap()
    return 1;
 };
 
-/*
 void handle_include()
 {
    char *newfilename = malloc(strlen(yytext)+1-strlen("#include \"\""));
@@ -194,5 +193,5 @@ void handle_include()
      exit(1);
    }
 }
-*/
+
 

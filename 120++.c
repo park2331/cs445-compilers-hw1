@@ -15,7 +15,6 @@ int main(int argc, char**argv) {
   int code = -1;
   int i;
 
-  //  yyin = fopen("argv[1]","r");
   yyin = fopen("test.c++","r");
 
   printf("CATEGORY     TEXT     LINE NO.\n");
