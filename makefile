@@ -1,17 +1,23 @@
 CC=gcc
 CFLAGS=-c -g
 
-120++: 120++.o lex.yy.o
-	$(CC) -o 120++ 120++.o lex.yy.o
+120++: 120++.o lex.yy.o token.o tlist.o 
+	$(CC) -o 120++ 120++.o lex.yy.o token.o tlist.o
 
-120++.o: 120++.c token.c tlist.c
-	$(CC) $(CFLAGS) 120++.c token.c llist.c
+120++.o: 120++.c 
+	$(CC) $(CFLAGS) 120++.c
 
 lex.yy.o: lex.yy.c
 	$(CC) $(CFLAGS) lex.yy.c
 
-lex.yy.c: clex.l cgram.tab.h token.h
-	flex clex.l token.c
+lex.yy.c: clex.l cgram.tab.h
+	flex clex.l
+
+token.o: token.c token.h
+	$(CC) $(CFLAGS) token.c
+
+tlist.o: tlist.c tlist.h
+	$(CC) $(CFLAGS) tlist.c
 
 ## phase 2: ignore for now
 

@@ -16,7 +16,7 @@ tokenptr create_token(int category, char *text, int lineno) {
   t->text = malloc(strlen(text)+1);
   strcpy(t->text, text);
   t->lineno = lineno;
-  printf("TOKEN CREATED\n");
+  /*  printf("TOKEN CREATED\n"); */
   /* allocate for filename field */
   /*
   t->filename = malloc(strlen(filename)+1);
