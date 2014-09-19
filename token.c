@@ -6,6 +6,9 @@
 
 void print_token(tokenptr t) {
   printf("CATEGORY: %d\n",t->category);
+  printf("STRING: %s\n",t->text);
+  printf("LINE NO: %d\n",t->lineno);
+  printf("FILE: %s\n",t->filename);
 };
 
 tokenptr create_token(int category, char *text, int lineno, char *filename) {
