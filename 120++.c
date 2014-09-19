@@ -8,21 +8,21 @@ extern FILE *yyin;
 extern char *yytext;
 extern tokenptr yytoken;
 
-int main(int argc, char**argv) {
+int main(int argc, char **argv) {
 
   struct node *root = NULL;
-
-  int code = -1;
+  char files[argc];
   int i;
 
-  yyin = fopen("test.c++","r");
-
-  printf("CATEGORY     TEXT     LINE NO.\n");
-  while (code != 0) {
-    code = yylex();
-
-    //    printf("%d %s %d\n", yytoken->category, yytoken->text, yytoken->lineno);
-    //    add_token(yytoken, root);
+  for (i = 1; i < argc; i++) {
+    printf("%d: %s\n", i, argv[i]);
+    int code = -1;
+    yyin = fopen(argv[i],"r");
+    printf("CATEGORY     TEXT     LINE NO.\n");
+    while (code != 0) {
+      code = yylex();
+    }
+    fclose(yyin);
   }
-  fclose(yyin);
+  return 0;
 }
