@@ -198,6 +198,9 @@ void yyfree (void *  );
 
 /* Begin user sect3 */
 
+#define yywrap(n) 1
+#define YY_SKIP_YYWRAP
+
 extern int yylineno;
 
 extern char *yytext;
@@ -308,9 +311,9 @@ extern int yylex (void);
 #undef YY_DECL
 #endif
 
-#line 160 "clex.l"
+#line 173 "clex.l"
 
 
-#line 315 "clex.h"
+#line 318 "clex.h"
 #undef yyIN_HEADER
 #endif /* yyHEADER_H */

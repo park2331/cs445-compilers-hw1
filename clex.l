@@ -22,16 +22,19 @@ LIT      \"(\\.|[^\\"])*\"
 
 /* extern */
 extern int yychar;
-extern char* filetext;
+extern char *filetext;
+extern FILE *yyin;
 
 /* Global variables */
 tokenptr yytoken;
 FILE *saved_yyin;
+int saved_yylineno;
+char* saved_filetext;
 int errors = 0;
 
 /* #include flags */
 int ctime = FALSE;
-int iostream = FALSE;
+int iostream = 0;
 int iomanip = FALSE;
 int cmath = FALSE;
 int cstdlib = FALSE;
@@ -41,6 +44,7 @@ int string = FALSE;
 
 /* helper functions */
 void handle_include();
+int handle_EOF();
 void lexerr(char *s);
 void tokenize(int);
 
@@ -48,6 +52,7 @@ void tokenize(int);
 /* lexer options */
 %option yylineno
 %option default
+%option noyywrap
 /* To fix 'undefined reference errors' */
 %option header-file="clex.h"
 
@@ -55,9 +60,8 @@ void tokenize(int);
 
 \n                      { }
 [ \t\f]+                { }
-"/*"([^*]*|"*"+[^/]*)"*/" { /* ignore c style comments */}
-
-"#include <iostream>"   { iostream = TRUE; }
+"/*"([^*]*|"*"+[^/]*)"*/" { /* ignore c style comments */ }
+"#include <iostream>"   { iostream = TRUE;}
 "#include <ctime>"      { ctime = TRUE; }
 "#include <iomanip>"    { iomanip = TRUE; }
 "#include <cmath>"      { cmath = TRUE; }
@@ -65,7 +69,8 @@ void tokenize(int);
 "#include <cstring>"    { cstring = TRUE; }
 "#include <fstream>"    { fstream = TRUE; }
 "#include <string>"     { string  = TRUE; }
-"#include "(<|\")[^(>|\")]+(>|\") { handle_include(); }
+"#include"[ ]*\"[^\\"]+\" {handle_include(); }
+"using namespace std"   { } 
 
 "break"                 { tokenize(BREAK); return BREAK; }
 "case"                  { tokenize(CASE); return CASE; }
@@ -101,8 +106,8 @@ void tokenize(int);
 
 {L}({L}|{D})*           { tokenize(IDENTIFIER); return IDENTIFIER; }
 
-0[xX]{H}+{IS}?          { lexerr("Hex not supported\n"); }
-0{O}+{IS}?              { lexerr("Octal not supported\n"); }
+0[xX]{H}+{IS}?          { printf("Hex not supported\n"); }
+0{O}+{IS}?              { printf("Octal not supported\n"); }
 
 {D}+{IS}?               { tokenize(ICON); return ICON; }
 '(\\.|[^\\'])+'         { tokenize(CCON); return CCON; }
@@ -157,48 +162,39 @@ L?{LIT}                 { tokenize(STRINGL); return STRINGL; }
 "^"                     { tokenize(ER); return ER; }
 "|"                     { tokenize(OR); return OR; }
 "?"                     { tokenize(QUEST); return QUEST; }
-.                       { printf("UNRECOGNIZED TOKEN\n"); errors++;}
+.                       { printf("HERE\n"); }
+<<EOF>>                 { 
+  yypop_buffer_state();
+  if (!YY_CURRENT_BUFFER) {
+    printf("NO MORE BUFFERS!\n");
+    yyterminate();
+  } 
+}
 %%
 
 void tokenize(int category) {
   yytoken = create_token(category, yytext, yylineno, filetext);
 };
 
+/*
 void lexerr(char *s)
 {
   errors++;
   fprintf(stderr, "%s: lexical error", s);
-  /* to do: add mechanism for reporting file name and line number */
+
   fprintf(stderr, ", token = \"%s\"\n", yytext);
 };
-
-/*
- * Return 1 if done, 0 if yyin points at more input
- */
-
-int yywrap()
-{
-   return 1;
-};
-
-void handle_include() {
-  printf("OK\n");
-}
-
-/*
-void handle_include()
-{
-   char *newfilename = malloc(strlen(yytext)+1-strlen("#include \"\""));
-   saved_yyin = yyin;
-   char *fname = strchr(yytext, '\"')+1;
-   fname[strlen(fname)-1] = '\0';
-   fprintf(stdout, "included filename '%s'\n", fname); fflush(stdout);
-   yyin = fopen(fname,"r");
-   if (yyin == NULL) {
-     lexerr("cannot open include file");
-     exit(1);
-   }
-}
 */
 
+void handle_include() {
+  FILE *include_buffer;
+  YY_BUFFER_STATE incl_state;
 
+  char *fname = malloc(strlen(yytext)+1-strlen("#include \"\""));
+  fname = strchr(yytext, '\"')+1;
+  fname[strlen(fname)-1] = '\0';
+  printf("%s\n",fname);
+  yyin = fopen(fname,"r");
+  yypush_buffer_state(yy_create_buffer(yyin, YY_BUF_SIZE));
+
+};

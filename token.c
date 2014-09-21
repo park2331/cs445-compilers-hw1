@@ -6,7 +6,7 @@
 #include "token.h"
 
 void print_token(tokenptr t) {
-  printf("%d\t%s\t\t%d\t%s\t%d\t%s\n",t->category, t->text ,t->lineno, t->filename, t->ival, t->sval);
+  printf("%d\t%s\t%d\t%s\t%d\t%s\n",t->category, t->text ,t->lineno, t->filename, t->ival, t->sval);
 };
 
 char *get_stringl(char *string) {
