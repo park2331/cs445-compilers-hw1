@@ -15,6 +15,7 @@ LIT      \"(\\.|[^\\"])*\"
 #include <ctype.h>
 #include "cgram.tab.h"
 #include "token.h"
+#include "tlist.h"
 
 /* ENUM types */
 #define TRUE 1
@@ -24,6 +25,7 @@ LIT      \"(\\.|[^\\"])*\"
 extern int yychar;
 extern char *filetext;
 extern FILE *yyin;
+extern nodeptr *filestack;
 
 /* Global variables */
 tokenptr yytoken;
@@ -164,7 +166,10 @@ L?{LIT}                 { tokenize(STRINGL); return STRINGL; }
 "?"                     { tokenize(QUEST); return QUEST; }
 .                       { printf("HERE\n"); }
 <<EOF>>                 { 
+
   yypop_buffer_state();
+
+  yylineno = 1;
   if (!YY_CURRENT_BUFFER) {
     printf("NO MORE BUFFERS!\n");
     yyterminate();
@@ -173,6 +178,9 @@ L?{LIT}                 { tokenize(STRINGL); return STRINGL; }
 %%
 
 void tokenize(int category) {
+  if (*filestack) {
+    filetext = filestack[0]->filename;
+  }
   yytoken = create_token(category, yytext, yylineno, filetext);
 };
 

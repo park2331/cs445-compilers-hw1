@@ -3,6 +3,7 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "tlist.h"
 #include "token.h"
 
@@ -20,6 +21,26 @@ void add_node(nodeptr *head, tokenptr value) {
     }
     go->next = a;
   }
+}
+
+void push_fname(nodeptr *head, char *fname) {
+  nodeptr a = malloc(sizeof(struct node));
+  a->filename = malloc(sizeof(fname)+1);
+  a->next = NULL;
+
+  strcpy(a->filename, fname);
+  if (*head == NULL) {
+    *head = a;
+  } else {
+    a->next = *head;
+  }
+}
+
+void pop_fname(nodeptr *head) {
+  nodeptr popped;
+  popped = *head;
+  *head = (*head)->next;
+  free(popped);
 }
 
 void print_nodes(nodeptr *head) {

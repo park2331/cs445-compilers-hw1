@@ -10,10 +10,12 @@ extern tokenptr yytoken;
 
 /* extern in clex.l to get file name */
 char *filetext;
+nodeptr *filestack = NULL;
 
 int main(int argc, char **argv) {
 
   struct node *root = NULL;
+
   tokenptr get;
   int i;
   int code = -1;
@@ -28,7 +30,6 @@ int main(int argc, char **argv) {
   argv++;
   for (i = 0; i < argc; i++) {
     filelist[i] = argv[i];
-
   }
 
   /* Push onto flex's convenient buffer */
@@ -39,6 +40,7 @@ int main(int argc, char **argv) {
       return 0;
     }
     filetext = filelist[i];
+    push_fname(&filestack, filelist[i]);
     yypush_buffer_state(yy_create_buffer(yyin, YY_BUF_SIZE));
   }
   

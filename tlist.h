@@ -13,14 +13,11 @@ typedef struct node {
   struct node *next;
 } *nodeptr;
 
-typedef struct list {
-  nodeptr head;
-  nodeptr tail;
-} *listptr;
-
 /* Node double pointer parameter for pass by reference */
 void add_node(nodeptr*, tokenptr);
 void print_nodes(nodeptr*);
 void delete_all_nodes(nodeptr*); 
+void push_fname(nodeptr*, char*);
+void pop_fname(nodeptr*);
 
 #endif /* TLIST_H */
