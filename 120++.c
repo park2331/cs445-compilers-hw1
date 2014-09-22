@@ -10,7 +10,7 @@ extern tokenptr yytoken;
 
 /* extern in clex.l to get file name */
 char *filetext;
-nodeptr *filestack = NULL;
+nodeptr filestack = NULL;
 
 int main(int argc, char **argv) {
 
@@ -40,10 +40,12 @@ int main(int argc, char **argv) {
       return 0;
     }
     filetext = filelist[i];
-    push_fname(&filestack, filelist[i]);
+    push_node(&filestack, filetext);
     yypush_buffer_state(yy_create_buffer(yyin, YY_BUF_SIZE));
   }
-  
+
+  printf("FILES TO BE PARSED:\n ");
+  print_stack(&filestack);
   /* Until 'code' returns 0 */
   while(code != 0) {
     code = yylex();

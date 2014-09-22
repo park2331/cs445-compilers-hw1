@@ -25,7 +25,7 @@ LIT      \"(\\.|[^\\"])*\"
 extern int yychar;
 extern char *filetext;
 extern FILE *yyin;
-extern nodeptr *filestack;
+extern nodeptr filestack;
 
 /* Global variables */
 tokenptr yytoken;
@@ -164,10 +164,15 @@ L?{LIT}                 { tokenize(STRINGL); return STRINGL; }
 "^"                     { tokenize(ER); return ER; }
 "|"                     { tokenize(OR); return OR; }
 "?"                     { tokenize(QUEST); return QUEST; }
-.                       { printf("HERE\n"); }
+.                       { printf("HERE\n"); /* add in error message*/ }
 <<EOF>>                 { 
 
   yypop_buffer_state();
+  pop_node(&filestack);
+  if (filestack == NULL) {
+    yyterminate();    
+    printf("ALL FILES PARSED!\n");
+  }
 
   yylineno = 1;
   if (!YY_CURRENT_BUFFER) {
@@ -178,9 +183,7 @@ L?{LIT}                 { tokenize(STRINGL); return STRINGL; }
 %%
 
 void tokenize(int category) {
-  if (*filestack) {
-    filetext = filestack[0]->filename;
-  }
+  filetext = filestack->filename;
   yytoken = create_token(category, yytext, yylineno, filetext);
 };
 
@@ -203,6 +206,7 @@ void handle_include() {
   fname[strlen(fname)-1] = '\0';
   printf("%s\n",fname);
   yyin = fopen(fname,"r");
+  push_node(&filestack, fname);
   yypush_buffer_state(yy_create_buffer(yyin, YY_BUF_SIZE));
 
 };

@@ -7,6 +7,43 @@
 #include "tlist.h"
 #include "token.h"
 
+
+void print_stack(nodeptr *top) {
+  if(*top == NULL) {
+    printf("EMPTY STACK\n");
+    
+  } else {
+    nodeptr temp;
+    temp = *top;
+    while (temp != NULL) {
+      printf("%s\n",temp->filename);
+      temp = temp->next;
+    }
+  }
+}
+
+void pop_node(nodeptr *top) {
+  nodeptr temp;
+  temp = *top;
+  *top = (*top)->next;
+  free(temp);
+}
+
+/* Push node on char* stack for filenames */
+void push_node(nodeptr *top, char *fname) {
+  nodeptr temp = (nodeptr)malloc(sizeof(struct node));
+  temp->filename = malloc(sizeof(fname)+1);
+  temp->next = NULL;
+  strcpy(temp->filename, fname);
+
+  if(top == NULL) {
+    *top = temp;
+  } else {
+    temp->next = *top;
+    *top = temp;
+  }
+}
+
 /* Add token to linked list */
 void add_node(nodeptr *head, tokenptr value) {
   nodeptr a = malloc(sizeof(struct node));
@@ -21,26 +58,6 @@ void add_node(nodeptr *head, tokenptr value) {
     }
     go->next = a;
   }
-}
-
-void push_fname(nodeptr *head, char *fname) {
-  nodeptr a = malloc(sizeof(struct node));
-  a->filename = malloc(sizeof(fname)+1);
-  a->next = NULL;
-
-  strcpy(a->filename, fname);
-  if (*head == NULL) {
-    *head = a;
-  } else {
-    a->next = *head;
-  }
-}
-
-void pop_fname(nodeptr *head) {
-  nodeptr popped;
-  popped = *head;
-  *head = (*head)->next;
-  free(popped);
 }
 
 void print_nodes(nodeptr *head) {
